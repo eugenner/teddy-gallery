@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
+import { Observable } from "rxjs";
+import { Page } from "tns-core-modules/ui/page";
 
 @Component({
     selector: "Settings",
@@ -21,4 +23,5 @@ export class SettingsComponent implements OnInit {
         const sideDrawer = <RadSideDrawer>app.getRootView();
         sideDrawer.showDrawer();
     }
+
 }

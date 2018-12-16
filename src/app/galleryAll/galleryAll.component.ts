@@ -98,4 +98,10 @@ export class GalleryAllComponent implements OnInit {
         this.productService.galleryAllViewScrollPosition = Number(args.scrollOffset);
 
     }
+
+    getTitle(title: string) {
+        const names = title.match("^((SOLD.*!+)|(Reserved.*!+))?([A-Za-z ]*).*");
+
+        return names[names.length - 1];
+    }
 }
