@@ -3,21 +3,21 @@ import { NativeScriptCommonModule } from "nativescript-angular/common";
 
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
-import { HomeRoutingModule } from "./home-routing.module";
-import { HomeComponent } from "./home.component";
+import { GalleryAllRoutingModule } from "./galleryAll-routing.module";
+import { GalleryAllComponent } from "./galleryAll.component";
 
 @NgModule({
     imports: [
         NativeScriptCommonModule,
-        HomeRoutingModule,
+        GalleryAllRoutingModule,
         NativeScriptUIListViewModule,
         NativeScriptUISideDrawerModule
     ],
     declarations: [
-        HomeComponent
+        GalleryAllComponent
     ],
     schemas: [
         NO_ERRORS_SCHEMA
     ]
 })
-export class HomeModule { }
+export class GalleryAllModule { }

@@ -4,6 +4,12 @@
 .fa {
     font-family: "FontAwesome";
 }
+
+.beary {
+    font-family: "WWBearySpecial";
+    font-size: $page-content-placeholder-font-size;
+    font-weight: bold;
+}
 // Common page class
 .page-content {
     .page-placeholder {
@@ -73,9 +79,13 @@ $sidedrawer-list-icon-size: 20;
             padding-left: $sidedrawer-list-item-offset-left;
             Label {
                 vertical-align: center;
-                color: $blue-dark;
+                color: $brown-dark;
             }
             .fa {
+                width: $sidedrawer-list-icon-size;
+                margin-right: $sidedrawer-list-icon-offset;
+            }
+            .beary {
                 width: $sidedrawer-list-icon-size;
                 margin-right: $sidedrawer-list-icon-offset;
             }

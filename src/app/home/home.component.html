@@ -1,21 +1,20 @@
-<ActionBar class="action-bar">
-    <!-- 
-    Use the NavigationButton as a side-drawer button in Android
-    because ActionItems are shown on the right side of the ActionBar
-    -->
-    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
-    <!-- 
-    Use the ActionItem for IOS with position set to left. Using the
-    NavigationButton as a side-drawer button in iOS is not possible,
-    because its function is to always navigate back in the application.
-    -->
-    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()"
-        ios.position="left">
+<ActionBar class="action-bar" xmlns:android="" xmlns:ios="">
+    <NavigationButton ios:visibility="collapsed" icon="res://menu_b" (tap)="onDrawerButtonTap()"></NavigationButton>
+    <ActionItem icon="res://menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()"
+                android.position="left">
     </ActionItem>
-    <Label class="action-bar-title" text="Home"></Label>
+    <Label class="action-bar-title" text="For Sale"></Label>
 </ActionBar>
 
-<GridLayout class="page page-content">
-    <Label class="page-icon fa" text="&#xf015;"></Label>
-    <Label class="page-placeholder" text="<!-- Page content goes here -->"></Label>
-</GridLayout>
+<RadListView id="listView" row="1" [items]="items" height="100%" class="page page-content" (scrollEnded)="onScrollEnded($event)">
+        <ListViewGridLayout id="listViewGrid" tkListViewLayout spanCount="1">
+            <ng-template let-item="item" let-i="index">
+                <StackLayout class="card-view" id="{{ i }}" item_listing_id="{{ item.listing_id }}" orientation="vertical" (tap)="onTap($event)">
+                    <Image class="card-image" src="{{ item.imagesData.results[0].url_170x135 }}" stretch="aspectFill"></Image>
+                    <StackLayout orientation="vertical" horizontalAlignment="center" verticalalignment="bottom">
+                        <Label class="nameLabel" [text]="getTitle(item.title)"></Label>
+                    </StackLayout>
+                </StackLayout>
+            </ng-template>
+        </ListViewGridLayout>
+</RadListView>

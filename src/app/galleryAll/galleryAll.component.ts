@@ -1,10 +1,6 @@
 import { Component, Injectable, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular";
-import {
-    ListViewItemSnapMode,
-    ListViewScrollEventData,
-    RadListView
-} from "nativescript-ui-listview";
+import { ListViewItemSnapMode, ListViewScrollEventData, RadListView } from "nativescript-ui-listview";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import { Subscription } from "rxjs";
 import * as app from "tns-core-modules/application";
@@ -14,18 +10,19 @@ import { IListing } from "~/app/EtsyListingsResult";
 import { ProductService, ShopSection } from "~/app/product.service";
 
 @Component({
-    selector: "Home",
+    selector: "GalleryAll",
     moduleId: module.id,
-    templateUrl: "./home.component.html",
-    styleUrls: ["./home.component.css"]
+    templateUrl: "./galleryAll.component.html",
+    styleUrls: ["./galleryAll.component.css"]
 })
 @Injectable()
-export class HomeComponent implements OnInit {
+export class GalleryAllComponent implements OnInit {
     items = new ObservableArray<IListing>();
     sbs: Subscription;
     listView: RadListView;
+    private activity: any;
     private isSubscriptionComplete = false;
-    private scrollIndex = 0;
+    private scrollIndex: number;
 
     constructor(private productService: ProductService, private page: Page,
                 private routerExtensions: RouterExtensions) {
@@ -36,62 +33,49 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         console.log("ngOnInit");
-        this.listView = <RadListView>(this.page.getViewById("listView"));
-        // this.listView.scrollWithAmount(this.productService.forAdoptionViewScrollPosition, false);
 
         // app.on(app.resumeEvent, (args: app.ApplicationEventData) => {
         //     this.listView = <RadListView>(this.page.getViewById("listView"));
-        //     console.log("home resumeUpdates");
         //     this.listView.resumeUpdates(true);
         // });
 
         app.on(app.orientationChangedEvent, (args: app.OrientationChangedEventData) => {
-            // args.newValue === "portrait" ? this.spanCount = 1 : this.spanCount = 2;
-            // Should work to trigger change detection for the ngClass to add padding to the right and left of the nav
             console.log("orientation changed: " + args.newValue);
-            // args.newValue === "portrait" ? this.spanCount = 2 : this.spanCount = 1;
-            // this.listView.scrollToIndex(1);
-            // this.listView.scrollWithAmount(10, false);
-
-            // Have to setup the spanCount parameter with new ListViewGridLayout
-            // const lwgl = new ListViewGridLayout();
-            // lwgl.spanCount = (args.newValue === "portrait" ? 1 : 2);
-            // this.listView.listViewLayout = lwgl;
-            // this.setSpanCount((args.newValue === "portrait" ? 1 : 2));
-
-            // this.listView.refresh();
 
         });
 
         this.page.on("navigatedTo", (data: NavigatedData) => {
-            console.log("isBackNavigation: " + data.isBackNavigation);
+            console.log("isBackNavigation2: " + data.isBackNavigation);
+
+            this.listView = <RadListView>(this.page.getViewById("listView"));
+            //
+            // if (this.listView.updatesSuspended()) {
+            //     console.log("galleryAll resume");
+            //     this.listView.resumeUpdates(true);
+            // }
 
             if (data.isBackNavigation) {
                 this.listView.resumeUpdates(true);
                 this.listView.scrollToIndex(this.scrollIndex, false, ListViewItemSnapMode.Start);
+                // this.listView.refresh();
 
                 return;
             }
 
             setTimeout(() => {
-                console.log("scrollWithAmount: " + this.productService.forAdoptionViewScrollPosition);
-                this.listView.scrollWithAmount(this.productService.forAdoptionViewScrollPosition, true);
+                console.log("scrollWithAmount: " + this.productService.galleryAllViewScrollPosition);
+                this.listView.scrollWithAmount(this.productService.galleryAllViewScrollPosition, true);
             }, 100);
 
-            this.productService.getActiveListingsWithImages(ShopSection.Toy).subscribe((item) => {
-                if (item.title.match("SOLD OUT") != null) {
-                    return;
-                }
-                if (item.title.match("Reserved") != null) {
-                    return;
-                }
+            this.productService.getAllShopSectionListingsWithImages(ShopSection.Toy).subscribe((item) => {
 
                 this.items.push(item);
-                console.log("push home item: " + item.listing_id);
+                console.log("galleryAll push item: " + item.listing_id);
             }, null, () => {
                 this.isSubscriptionComplete = true;
                 console.log("complete2");
             });
+
         });
     }
 
@@ -102,25 +86,16 @@ export class HomeComponent implements OnInit {
 
     onTap(args: any) {
         // this.sbs.unsubscribe();
+        this.listView = <RadListView>(this.page.getViewById("listView"));
         this.scrollIndex = Number(args.view.id);
         this.listView.scrollToIndex(this.scrollIndex, false, ListViewItemSnapMode.Start);
-
         this.productService.setSelectedItem(this.items.getItem(args.view.id));
-
         this.productService.setSelectedItemId(args.view.item_listing_id);
         this.routerExtensions.navigate(["/featured"], {animated: false});
     }
 
     onScrollEnded(args: ListViewScrollEventData) {
+        this.productService.galleryAllViewScrollPosition = Number(args.scrollOffset);
 
-        console.log("State: Scroll ended with offset: " + args.scrollOffset);
-        this.productService.forAdoptionViewScrollPosition = Number(args.scrollOffset);
-
-    }
-
-    getTitle(title: string) {
-        const name = title.match("^([A-Za-z ]*).*")[1];
-
-        return name;
     }
 }

@@ -1,21 +1,54 @@
-<ActionBar class="action-bar">
-    <!-- 
-    Use the NavigationButton as a side-drawer button in Android
-    because ActionItems are shown on the right side of the ActionBar
-    -->
-    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
-    <!-- 
-    Use the ActionItem for IOS with position set to left. Using the
-    NavigationButton as a side-drawer button in iOS is not possible,
-    because its function is to always navigate back in the application.
-    -->
-    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()"
-        ios.position="left">
-    </ActionItem>
-    <Label class="action-bar-title" text="Featured"></Label>
-</ActionBar>
+    <ActionBar xmlns:ios="" xmlns:android="" class="action-bar">
+        <!--
+        Use the NavigationButton as a side-drawer button in Android
+        because ActionItems are shown on the right side of the ActionBar
+        -->
+        <NavigationButton ios:visibility="collapsed" icon="res://menu_b" (tap)="onDrawerButtonTap()"></NavigationButton>
+        <!--
+        Use the ActionItem for IOS with position set to left. Using the
+        NavigationButton as a side-drawer button in iOS is not possible,
+        because its function is to always navigate back in the application.
+        -->
+        <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()"
+                    ios.position="left">
+        </ActionItem>
+        <Label class="action-bar-title" text="Featured ({{ itemNo + 1 }} / {{ itemsCount }})">
+        </Label>
+        <ActionItem icon="res://icon_etsy"
+                    (tap)="launchEtsyShop()" android.position="right">
+        </ActionItem>
+    </ActionBar>
 
-<GridLayout class="page page-content">
-    <Label class="page-icon fa" text="&#xf005;"></Label>
-    <Label class="page-placeholder" text="<!-- Page content goes here -->"></Label>
-</GridLayout>
+    <GridLayout rows="8, *" class="main_layout" stretchLastChild="false">
+        <Label row="0" verticalAlignment="bottom" width="100%" backgroundColor="rgba(235, 232, 206, 0.5)"></Label>
+        <Image row="1" id="image" class="card-image" height="80%" verticalAlignment="top"
+               src="{{ item.url_570xN }}" (pinch)="onPinch($event)" (pan)="onPan($event)"
+               (tap)="onDoubleTap($event)"></Image>
+        <StackLayout row="1" id="stackLayout" height="20%" orientation="vertical" verticalAlignment="bottom"
+                     (loaded)="getStackLayoutSize($event)">
+
+            <AbsoluteLayout orientation="vertical" verticalAlignment="bottom"
+                            width="100%">
+                <GridLayout rows="*" width="100%">
+                    <Label row="0" class="description_label" height="50%" verticalAlignment="bottom"
+                           width="100%"></Label>
+                    <Label row="0" height="15" width="100%" backgroundColor="brown" (pan)="onPanLabel($event)"></Label>
+
+                    <GridLayout row="0" width="auto" verticalAlignment="middle"
+                                horizontalAlignment="right" style="padding-right: 20;"
+                                backgroundColor="transparent">
+                        <Label row="0" class="fa circle" text="&#xf111;"
+                               textAlignment="center" verticalAlignment="middle" (pan)="onPanLabel($event)"></Label>
+                        <Label row="0" class="fa up" text="&#xf062;"
+                               textAlignment="center" verticalAlignment="middle"></Label>
+                    </GridLayout>
+
+                </GridLayout>
+            </AbsoluteLayout>
+
+            <ScrollView orientation="vertical" class="description_label">
+                <Label class="description_text" text="{{getLabelText(selectedItem)}}"
+                       textAlignment="left" textWrap="true"></Label>
+            </ScrollView>
+        </StackLayout>
+    </GridLayout>
